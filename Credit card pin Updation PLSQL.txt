@@ -1,0 +1,82 @@
+Create table ccpin(cc_num number,ph_num number,pin number,modified_date date,modified_by varchar2(100));
+Insert into ccpin(cc_num,ph_num,pin,modified_date,modified_by)values(123456789,9030654789,1111,sysdate,'vinod');
+Insert into ccpin(cc_num,ph_num,pin,modified_date,modified_by)values(987654321,9603581524,2222,sysdate,'ABC');
+commit;
+Select * from ccpin;
+Create or Replace Procedure pin_upd(P_cc_num number,
+                                    P_pin number,
+                                    P_Msg OUT varchar2)
+As 
+   L_CC varchar2(100);
+Begin
+   L_CC:=substr(P_cc_num,1,4)||'XXXX XXXX'||substr(P_cc_num,-4);
+update ccpin
+   set pin             =P_pin,
+       modified_date =sysdate,
+       modified_By   =user
+where cc_num=P_cc_num;
+commit;
+P_Msg:='Your pin for Credit card'||L_CC||'has been updated successfully';
+END pin_upd;
+/
+Declare
+      Msg varchar2(100);
+Begin
+   pin_upd(123456789,9999,Msg);
+   DBMS_OUTPUT.PUT_LINE(Msg);
+end;
+/
+Select * from ccpin;
+Declare
+      Msg varchar2(100);
+Begin
+      pin_upd(0,0,Msg);
+      DBMS_OUTPUT.PUT_LINE(Msg);
+END;
+/
+Select * from ccpin;
+Create or Replace Procedure pin_upd(P_cc_num number,
+                                    P_pin number,
+                                    P_Msg OUT varchar2)
+As 
+   L_COUNT number;
+   L_CC  varchar2(100);
+   CC_Length_Exception Exception;
+   CC_Invalid Exception;
+Begin
+Select Count(*) into L_COUNT from ccpin where cc_num=P_cc_num;
+If length(P_pin)=4 AND L_COUNT=1 Then L_CC:=substr(P_cc_num,-4);
+update ccpin
+         set pin  = P_pin,
+         modified_date =sysdate,
+         modified_by =user
+where cc_num=P_cc_num;
+commit;
+P_Msg:='Your Pin for credit card'||L_CC||'has updated succesfully';
+Elsif length(P_pin)<>4 Then
+     Raise CC_Length_Exception;
+Elsif L_COUNT=0 Then
+     Raise CC_Invalid;
+END If;
+/
+Exception
+   when CC_Length_Exception Then
+     P_Msg:='Length of pin should be 4 digit';
+   when CC_Invalid Then
+     P_Msg:=P_cc_num||'Credit card number is not valid';
+END pin_upd;
+/
+Declare 
+       Msg varchar2(100);
+Begin
+       pin_upd(123456789,0,Msg);
+       DBMS_OUTPUT.PUT_LINE(Msg);
+END;
+/
+Declare 
+       Msg varchar2(100);
+Begin
+       pin_upd(0,1234,Msg);
+       DBMS_OUTPUT.PUT_LINE(Msg);
+END;
+/

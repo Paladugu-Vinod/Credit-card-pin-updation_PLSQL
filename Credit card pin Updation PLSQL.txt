@@ -1,6 +1,9 @@
 Create table ccpin(cc_num number,ph_num number,pin number,modified_date date,modified_by varchar2(100));
 Insert into ccpin(cc_num,ph_num,pin,modified_date,modified_by)values(123456789,9030654789,1111,sysdate,'vinod');
-Insert into ccpin(cc_num,ph_num,pin,modified_date,modified_by)values(987654321,9603581524,2222,sysdate,'ABC');
+Insert into ccpin(cc_num,ph_num,pin,modified_date,modified_by)values(987654321,9904529873,2222,sysdate,'Yash');
+Insert into ccpin(cc_num,ph_num,pin,modified_date,modified_by)values(156423879,9133725486,2222,sysdate,'Siva');
+Insert into ccpin(cc_num,ph_num,pin,modified_date,modified_by)values(852963741,9019335824,2222,sysdate,'Hamaresh');
+Insert into ccpin(cc_num,ph_num,pin,modified_date,modified_by)values(268413975,8057682264,2222,sysdate,'Rohith');
 commit;
 Select * from ccpin;
 Create or Replace Procedure pin_upd(P_cc_num number,
